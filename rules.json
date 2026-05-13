@@ -1,0 +1,91 @@
+{
+    "schema": 1,
+    "feed_version": "2026.05.13.090816",
+    "generated_at": "2026-05-13T09:08:16Z",
+    "min_plugin_version": "0.2.0",
+    "rules": [
+        {
+            "id": "vgfw-ua-010",
+            "name": "Scripted HTTP client library at checkout",
+            "type": "ua",
+            "pattern": "/(java\\/|apache-httpclient|okhttp|axios\\/|node-fetch|guzzlehttp|python-httpx|aiohttp|ruby|dart\\/|dotnet|winhttp|powershell|postmanruntime|insomnia|restsharp)/i",
+            "action": "block",
+            "severity": "high",
+            "source": "public: common non-browser HTTP client/runtime tokens; legitimate shoppers do not place orders from these",
+            "added": "2026-05-15"
+        },
+        {
+            "id": "vgfw-ua-011",
+            "name": "Browser-automation / headless framework (extended)",
+            "type": "ua",
+            "pattern": "/(playwright|electron|nightmarejs|htmlunit|cypress|webdriver|chrome-lighthouse|splash|zombie\\.js)/i",
+            "action": "block",
+            "severity": "high",
+            "source": "public: headless/automation framework signatures beyond the in-code baseline",
+            "added": "2026-05-15"
+        },
+        {
+            "id": "vgfw-ua-012",
+            "name": "Security / recon tooling user agent",
+            "type": "ua",
+            "pattern": "/(sqlmap|nikto|nmap|masscan|zgrab|nuclei|dirbuster|gobuster|wpscan|acunetix|netsparker|hydra|burpsuite|wfuzz|ffuf)/i",
+            "action": "block",
+            "severity": "high",
+            "source": "public: well-known offensive-tooling default user agents",
+            "added": "2026-05-15"
+        },
+        {
+            "id": "vgfw-ua-013",
+            "name": "Self-identifying card-checking / fraud toolkit",
+            "type": "ua",
+            "pattern": "/(card.?(checker|tester|bot)|cc.?(checker|chk)|stripe.?tester|mass.?check)/i",
+            "action": "block",
+            "severity": "high",
+            "source": "public fraud-community references; catches the low-effort tier that does not spoof a browser",
+            "added": "2026-05-15"
+        },
+        {
+            "id": "vgfw-ua-014",
+            "name": "Forged / ancient browser token (bot tell)",
+            "type": "ua",
+            "pattern": "/(MSIE [1-6]\\.0|Mozilla\\/4\\.0 \\(compatible; MSIE |Mozilla\\/[12]\\.|^Mozilla\\/5\\.0$)/i",
+            "action": "block",
+            "severity": "medium",
+            "source": "public: end-of-life / obviously forged UA strings not seen from real WooCommerce buyers",
+            "added": "2026-05-15"
+        },
+        {
+            "id": "vgfw-ua-015",
+            "name": "Generic crawler / spider self-identification at checkout",
+            "type": "ua",
+            "pattern": "/(\\bbot\\b|crawler|spider|crawl\\b|slurp|feedfetcher|scraper)/i",
+            "action": "log",
+            "severity": "low",
+            "source": "public: generic crawler tokens; log-only (some preview agents self-identify benignly)",
+            "added": "2026-05-15"
+        },
+        {
+            "id": "vgfw-hdr-001",
+            "name": "Legacy Proxy-Connection header (simple HTTP-lib tell)",
+            "type": "header_present",
+            "header": "Proxy-Connection",
+            "action": "log",
+            "severity": "low",
+            "source": "public: non-standard header emitted by some scripted clients and not by modern browsers; low signal, log-only",
+            "added": "2026-05-15"
+        },
+        {
+            "id": "vgfw-ip-001",
+            "name": "Documentation ranges (pipeline canary \u2014 replace with ASN data)",
+            "type": "ip_cidr",
+            "cidrs": [
+                "203.0.113.0/24",
+                "198.51.100.0/24"
+            ],
+            "action": "log",
+            "severity": "low",
+            "source": "RFC 5737 documentation ranges. Ships log-only to exercise the ip_cidr path end-to-end; real datacenter/hosting ASN ranges are layered in from telemetry, not hand-maintained here",
+            "added": "2026-05-15"
+        }
+    ]
+}
